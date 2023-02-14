@@ -1,5 +1,8 @@
 const { client } = require("./data")
 
+const label = "Time"
+console.time(label)
+
 // Money filter
 const VISA = 'Visa'
 const CHEQUE = 'Ch�ques'
@@ -11,7 +14,7 @@ let EQUALORLESS = 0
 
 // Search filter : as much as you want !
 
-let SEARCHARRAY = ["door","uber",'MARCHE','POULET','altaib']
+let SEARCHARRAY = ["door","uber",'MARCHE','POULET',"altaib"]
 
 // exclude this 1 search only works with 1 string for now
 let EXCLUDE = []
@@ -80,4 +83,26 @@ if (EXCLUDE.length > 0){
   console.log('-----------------------------------------------')
   console.log("Match Found :",finalResult.length, )
   console.log("Total Entries", client.length)
+}else if (EXCLUDE.length <= 0){
+
+  let needSorting = allResult.reduce((a,b) => a.concat(b))
+  let finalResult = needSorting.sort((a, b) => new Date(a.date) - new Date(b.date))
+  
+  let totalSpent = finalResult.reduce((a,b) => a + b["CAD"], 0)
+  
+  
+  console.log("finalResult",finalResult.length <= 0 ? result : finalResult)
+  
+  finalResult.sort((a, b) => new Date(a.date) - new Date(b.date))
+  
+  console.log("From :", finalResult.length  <= 0 ? result[0].date : finalResult[0].date, "--- Index :", 0)
+  console.log("To :", finalResult.length  <= 0 ? result[result.length -1].date : finalResult[finalResult.length -1].date,"--- Index :", finalResult.length <= 0 ? result.length -1 : finalResult.length -1)
+  console.log('-----------------------------------------------')
+  console.log("Total Spent :",Math.abs( Math.round((totalSpent + Number.EPSILON)*1000) /1000 ),"$")
+  console.log("Transaction Average", Math.abs( Math.round((totalSpent + Number.EPSILON) / finalResult.length * 100) /100),"$");
+  console.log('-----------------------------------------------')
+  console.log("Match Found :",finalResult.length, )
+  console.log("Total Entries", client.length)
 }
+
+console.timeEnd(label)
